@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { motion } from 'framer-motion';
+import { getCurrentBlockHeight } from '@/utils/api';
 
 // Mock claim history
 const mockClaimHistory = [
@@ -41,18 +42,45 @@ const ClaimAsh = () => {
   const [claimedAmount, setClaimedAmount] = useState('0');
   const [blockProgress, setBlockProgress] = useState(0);
 
+  // Function to fetch actual block height
+  const fetchCurrentBlockHeight = async () => {
+    try {
+      const blockHeight = await getCurrentBlockHeight();
+      setCurrentBlock(blockHeight);
+      // Calculate progress based on actual block height
+      const progress = ((blockHeight - 1040000) / 10000) * 100;
+      setBlockProgress(Math.min(progress, 99.9));
+    } catch (error) {
+      console.error('Error fetching block height:', error);
+    }
+  };
+
   useEffect(() => {
-    // Simulate block progress
-    const interval = setInterval(() => {
+    // Initial fetch of block height
+    fetchCurrentBlockHeight();
+
+    // Increment block every 0.4 seconds
+    const blockIncrementInterval = setInterval(() => {
       setCurrentBlock(prev => {
-        const newBlock = prev + Math.floor(Math.random() * 10);
+        const newBlock = prev + 1;
         const progress = ((newBlock - 1040000) / 10000) * 100;
         setBlockProgress(Math.min(progress, 99.9));
         return newBlock;
       });
-    }, 5000);
+    }, 400); // 0.4 seconds
 
-    return () => clearInterval(interval);
+    // Refresh actual block height every 5 minutes
+    const refreshInterval = setInterval(
+      () => {
+        fetchCurrentBlockHeight();
+      },
+      5 * 60 * 1000
+    ); // 5 minutes
+
+    return () => {
+      clearInterval(blockIncrementInterval);
+      clearInterval(refreshInterval);
+    };
   }, []);
 
   const handleClaim = () => {
