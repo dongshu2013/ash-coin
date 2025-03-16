@@ -11,8 +11,7 @@
     "prepare": "husky install",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
-    "pre-commit-test": "lint-staged",
-    "verify-hooks": "./verify-hooks.sh"
+    "pre-commit-test": "lint-staged"
   },
   "dependencies": {
     "@solana/wallet-adapter-base": "^0.9.23",
@@ -53,12 +52,6 @@
     "lint-staged": "^15.2.0",
     "prettier": "^3.1.1",
     "typescript": "^5"
-  },
-  "pnpm": {
-    "overrides": {
-      "usb": "npm:@esbuild-plugins/node-globals-polyfill",
-      "node-hid": "npm:@esbuild-plugins/node-globals-polyfill"
-    }
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
