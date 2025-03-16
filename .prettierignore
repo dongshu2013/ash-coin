@@ -1,0 +1,8 @@
+.next
+node_modules
+build
+coverage
+public
+.husky
+.github
+pnpm-lock.yaml 
