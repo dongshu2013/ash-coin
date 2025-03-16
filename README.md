@@ -31,22 +31,26 @@ A beautiful and simple web3 application that allows users to connect their Phant
 ### Installation
 
 1. Clone the repository:
+
    ```
    git clone https://github.com/yourusername/ash-coin.git
    cd ash-coin
    ```
 
 2. Install dependencies:
+
    ```
    pnpm install
    ```
 
 3. Initialize Husky pre-commit hooks:
+
    ```
    ./init-husky.sh
    ```
 
 4. Run the development server:
+
    ```
    pnpm dev
    ```
@@ -54,6 +58,7 @@ A beautiful and simple web3 application that allows users to connect their Phant
 5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
 Alternatively, you can use the provided setup script which will install pnpm if needed:
+
 ```
 ./setup.sh
 ```
@@ -65,16 +70,19 @@ Alternatively, you can use the provided setup script which will install pnpm if 
 This project uses ESLint and Prettier for code quality and formatting:
 
 - Run linting:
+
   ```
   pnpm lint
   ```
 
 - Run linting on all files:
+
   ```
   pnpm lint-all
   ```
 
 - Format code:
+
   ```
   pnpm format
   ```
@@ -92,6 +100,7 @@ The project uses Husky and lint-staged to run linting and formatting on staged f
 - Prettier will format your code
 
 To manually initialize or reset the pre-commit hooks:
+
 ```
 ./init-husky.sh
 ```
@@ -120,4 +129,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - Solana Foundation for their web3 libraries
 - Phantom wallet for their wallet adapter
-- Next.js team for the amazing framework 
+- Next.js team for the amazing framework

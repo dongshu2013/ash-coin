@@ -37,8 +37,10 @@ const clearCache = (walletAddress: string) => {
   try {
     // Clear tokens cache
     localStorage.removeItem(`ash-coin-tokens-cache-${walletAddress}`);
+    // eslint-disable-next-line no-console
     console.log('Cache cleared for wallet:', walletAddress);
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error clearing cache:', error);
   }
 };
@@ -161,14 +163,17 @@ const Dashboard = () => {
           setAshBalance('0');
         }
 
+        // eslint-disable-next-line no-console
         console.log('All assets:', formattedAssets);
       } else {
+        // eslint-disable-next-line no-console
         console.log('No assets found');
         setAssets([]);
         setTotalValue('0');
         setAshBalance('0');
       }
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Error fetching assets:', err);
       setError('Failed to load your assets. Please try again later.');
       setAssets([]);
@@ -197,10 +202,12 @@ const Dashboard = () => {
       const progress = ((blockHeight % 10000) / 10000) * 100;
       setBlockProgress(progress);
 
+      // eslint-disable-next-line no-console
       console.log(
         `Current block: ${blockHeight}, Next claim: ${nextMultiple}, Progress: ${progress.toFixed(1)}%`
       );
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error fetching current block:', error);
     } finally {
       setIsLoadingBlock(false);
@@ -221,6 +228,7 @@ const Dashboard = () => {
     return () => {
       clearInterval(blockInterval);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publicKey]);
 
   // Handle manual refresh

@@ -22,7 +22,7 @@ const WalletContextProvider: FC<WalletContextProviderProps> = ({ children }) => 
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
   // Only include the Phantom wallet adapter to avoid issues with other adapters
-  const wallets = useMemo(() => [new PhantomWalletAdapter()], [network]);
+  const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
 
   return (
     <ConnectionProvider endpoint={endpoint}>
