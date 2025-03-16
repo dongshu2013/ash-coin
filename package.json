@@ -12,8 +12,7 @@
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "pre-commit-test": "lint-staged",
-    "verify-hooks": "./verify-hooks.sh",
-    "postinstall": "node ./scripts/postinstall.js"
+    "verify-hooks": "./verify-hooks.sh"
   },
   "dependencies": {
     "@solana/wallet-adapter-base": "^0.9.23",

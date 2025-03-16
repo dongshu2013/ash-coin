@@ -4,14 +4,9 @@ const webpack = require('webpack');
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  // Add this to handle the usb package issue
-  transpilePackages: ['usb'],
   webpack: config => {
     // Add polyfills for Node.js modules used by Helius SDK
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
-
-    // Add usb to externals to prevent it from being bundled
-    config.externals.push('usb');
 
     // Add fallbacks for Node.js core modules
     config.resolve.fallback = {
@@ -27,8 +22,6 @@ const nextConfig = {
       https: require.resolve('https-browserify'),
       os: require.resolve('os-browserify/browser'),
       buffer: require.resolve('buffer/'),
-      // Add empty mock for usb
-      usb: false,
     };
 
     // Add buffer polyfill
