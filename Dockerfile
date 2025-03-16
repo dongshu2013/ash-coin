@@ -70,6 +70,7 @@ ENV HELIUS_API_KEY=""
 RUN echo '#!/bin/sh\n\
 echo "Starting server with environment variables:"\n\
 echo "HELIUS_API_KEY: ${HELIUS_API_KEY:-Not set}"\n\
+export HELIUS_API_KEY=${HELIUS_API_KEY:-""}\n\
 exec node server.js\n\
 ' > /app/start.sh && chmod +x /app/start.sh
 

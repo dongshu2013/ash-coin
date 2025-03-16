@@ -21,7 +21,11 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   output: 'standalone',
-  // Make the HELIUS_API_KEY available to the server
+  // Make environment variables available to the server
+  env: {
+    HELIUS_API_KEY: HELIUS_API_KEY || '',
+  },
+  // Also make them available via serverRuntimeConfig
   serverRuntimeConfig: {
     HELIUS_API_KEY: HELIUS_API_KEY || '',
   },

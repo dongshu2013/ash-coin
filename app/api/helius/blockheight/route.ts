@@ -1,18 +1,17 @@
 import { NextResponse } from 'next/server';
-import { HELIUS_API_KEY } from '@/utils/helius';
 
-// Construct the Helius RPC URL with the API key
+// Get the API key directly from environment variables
+const HELIUS_API_KEY = process.env.HELIUS_API_KEY || '';
 const HELIUS_RPC_URL = `https://mainnet.helius-rpc.com/?api-key=${HELIUS_API_KEY}`;
 
-// Add debug logging for the Helius RPC URL and API key (masking the actual key)
-// eslint-disable-next-line no-console
-console.log('Blockheight API route initialized with:');
-// eslint-disable-next-line no-console
-console.log('- API Key length:', HELIUS_API_KEY ? HELIUS_API_KEY.length : 0);
-// eslint-disable-next-line no-console
-console.log('- API Key is empty:', HELIUS_API_KEY === '');
-// eslint-disable-next-line no-console
-console.log('- RPC URL:', HELIUS_RPC_URL.replace(/api-key=([^&]*)/, 'api-key=[REDACTED]'));
+// Debug logging
+console.log(`[Blockheight API] Initializing with API key length: ${HELIUS_API_KEY.length}`);
+console.log(`[Blockheight API] API key is empty: ${HELIUS_API_KEY === ''}`);
+if (HELIUS_API_KEY.length > 0) {
+  console.log(`[Blockheight API] API key first 4 chars: ${HELIUS_API_KEY.substring(0, 4)}`);
+}
+console.log(`[Blockheight API] RPC URL: ${HELIUS_RPC_URL.replace(HELIUS_API_KEY, 'MASKED')}`);
+console.log(`[Blockheight API] NODE_ENV: ${process.env.NODE_ENV}`);
 
 export async function GET() {
   try {

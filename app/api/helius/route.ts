@@ -1,5 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { HELIUS_RPC_URL } from '@/utils/helius';
+
+// Get the API key directly from environment variables
+const HELIUS_API_KEY = process.env.HELIUS_API_KEY || '';
+const HELIUS_RPC_URL = `https://mainnet.helius-rpc.com/?api-key=${HELIUS_API_KEY}`;
+
+// Debug logging
+console.log(`[Main Helius API] Initializing with API key length: ${HELIUS_API_KEY.length}`);
+console.log(`[Main Helius API] API key is empty: ${HELIUS_API_KEY === ''}`);
+if (HELIUS_API_KEY.length > 0) {
+  console.log(`[Main Helius API] API key first 4 chars: ${HELIUS_API_KEY.substring(0, 4)}`);
+}
+console.log(`[Main Helius API] RPC URL: ${HELIUS_RPC_URL.replace(HELIUS_API_KEY, 'MASKED')}`);
+console.log(`[Main Helius API] NODE_ENV: ${process.env.NODE_ENV}`);
 
 // Rate limiting configuration
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute in milliseconds
