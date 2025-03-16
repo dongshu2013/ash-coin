@@ -54,6 +54,12 @@
     "prettier": "^3.1.1",
     "typescript": "^5"
   },
+  "pnpm": {
+    "overrides": {
+      "usb": "npm:@esbuild-plugins/node-globals-polyfill",
+      "node-hid": "npm:@esbuild-plugins/node-globals-polyfill"
+    }
+  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --max-warnings=0",

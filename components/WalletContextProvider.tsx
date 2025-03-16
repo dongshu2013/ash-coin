@@ -9,10 +9,6 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
   CoinbaseWalletAdapter,
-  LedgerWalletAdapter,
-  SolongWalletAdapter,
-  TorusWalletAdapter,
-  // TrezorWalletAdapter, // Removed to avoid USB dependency
 } from '@solana/wallet-adapter-wallets';
 
 // Import the wallet adapter styles
@@ -29,17 +25,9 @@ const WalletContextProvider: FC<WalletContextProviderProps> = ({ children }) => 
   // You can also provide a custom RPC endpoint
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
-  // Initialize all the supported wallet adapters (excluding Trezor to avoid USB dependency)
+  // Initialize the three most popular wallet adapters
   const wallets = useMemo(
-    () => [
-      new PhantomWalletAdapter(),
-      new SolflareWalletAdapter(),
-      new CoinbaseWalletAdapter(),
-      new LedgerWalletAdapter(),
-      new SolongWalletAdapter(),
-      new TorusWalletAdapter(),
-      // new TrezorWalletAdapter(), // Removed to avoid USB dependency
-    ],
+    () => [new PhantomWalletAdapter(), new SolflareWalletAdapter(), new CoinbaseWalletAdapter()],
     []
   );
 
