@@ -1,13 +1,29 @@
 /** @type {import('next').NextConfig} */
 const webpack = require('webpack');
 
+// Load environment variables from .env.local if running in development
+if (process.env.NODE_ENV === 'development') {
+  require('dotenv').config({ path: '.env.local' });
+}
+
+// Get environment variables
+const { HELIUS_API_KEY } = process.env;
+
+// Log environment variables in development only
+if (process.env.NODE_ENV === 'development') {
+  console.log('Next.js config - Environment variables:', {
+    HELIUS_API_KEY: HELIUS_API_KEY ? `Set (length: ${HELIUS_API_KEY.length})` : 'Not set',
+    NODE_ENV: process.env.NODE_ENV,
+  });
+}
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   output: 'standalone',
-  // Explicitly define environment variables that should be available at runtime
-  env: {
-    NEXT_PUBLIC_HELIUS_API_KEY: process.env.NEXT_PUBLIC_HELIUS_API_KEY || '',
+  // Make the HELIUS_API_KEY available to the server
+  serverRuntimeConfig: {
+    HELIUS_API_KEY: HELIUS_API_KEY || '',
   },
   webpack: config => {
     // Add polyfills for Node.js modules used by Helius SDK
@@ -36,12 +52,6 @@ const nextConfig = {
         process: 'process/browser',
       })
     );
-
-    // Log environment variables during build (for debugging)
-    console.log('Building with environment variables:', {
-      NEXT_PUBLIC_HELIUS_API_KEY: process.env.NEXT_PUBLIC_HELIUS_API_KEY ? 'Set' : 'Not set',
-      NODE_ENV: process.env.NODE_ENV,
-    });
 
     return config;
   },

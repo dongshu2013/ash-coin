@@ -64,12 +64,12 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 # Add environment variables that will be available at runtime
 # These will be overridden by Railway environment variables
-ENV NEXT_PUBLIC_HELIUS_API_KEY=""
+ENV HELIUS_API_KEY=""
 
 # Create a script to start the application with environment variables
 RUN echo '#!/bin/sh\n\
 echo "Starting server with environment variables:"\n\
-echo "NEXT_PUBLIC_HELIUS_API_KEY: ${NEXT_PUBLIC_HELIUS_API_KEY:-Not set}"\n\
+echo "HELIUS_API_KEY: ${HELIUS_API_KEY:-Not set}"\n\
 exec node server.js\n\
 ' > /app/start.sh && chmod +x /app/start.sh
 
