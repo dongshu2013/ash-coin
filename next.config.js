@@ -6,8 +6,8 @@ if (process.env.NODE_ENV === 'development') {
   require('dotenv').config({ path: '.env.local' });
 }
 
-// Get environment variables - check both HELIUS_API_KEY and NEXT_PUBLIC_HELIUS_API_KEY
-const HELIUS_API_KEY = process.env.HELIUS_API_KEY || process.env.NEXT_PUBLIC_HELIUS_API_KEY || '';
+// Get environment variables
+const { HELIUS_API_KEY } = process.env;
 
 // Log environment variables in development only
 if (process.env.NODE_ENV === 'development') {
@@ -24,14 +24,10 @@ const nextConfig = {
   // Make environment variables available to the server
   env: {
     HELIUS_API_KEY: HELIUS_API_KEY || '',
-    NEXT_PUBLIC_HELIUS_API_KEY: HELIUS_API_KEY || '',
   },
   // Also make them available via serverRuntimeConfig
   serverRuntimeConfig: {
     HELIUS_API_KEY: HELIUS_API_KEY || '',
-  },
-  publicRuntimeConfig: {
-    NEXT_PUBLIC_HELIUS_API_KEY: HELIUS_API_KEY || '',
   },
   webpack: config => {
     // Add polyfills for Node.js modules used by Helius SDK
