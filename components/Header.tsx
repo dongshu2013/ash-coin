@@ -1,8 +1,8 @@
 'use client';
 
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import Image from 'next/image';
 import Link from 'next/link';
+import CustomWalletButton from './CustomWalletButton';
 
 const Header = () => {
   return (
@@ -17,7 +17,7 @@ const Header = () => {
           </span>
         </Link>
 
-        <WalletMultiButton className="btn-primary" />
+        <CustomWalletButton className="btn-primary" />
       </div>
     </header>
   );
