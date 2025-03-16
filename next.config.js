@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  output: 'standalone',
   webpack: config => {
     // Add polyfills for Node.js modules used by Helius SDK
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
