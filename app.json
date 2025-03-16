@@ -1,0 +1,12 @@
+{
+  "name": "ash-coin",
+  "description": "Ash Coin application",
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-apt"
+    },
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-nodejs"
+    }
+  ]
+}
