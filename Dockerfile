@@ -61,6 +61,10 @@ RUN apt-get update && apt-get install -y \
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
+# Add environment variables that will be available at runtime
+# These will be overridden by Railway environment variables
+ENV HELIUS_API_KEY=""
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 

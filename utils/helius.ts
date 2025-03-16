@@ -1,5 +1,9 @@
 // Get Helius API key from environment variable
-const HELIUS_API_KEY = process.env.NEXT_PUBLIC_HELIUS_API_KEY || 'YOUR_HELIUS_API_KEY';
+// In production, use HELIUS_API_KEY, in development use NEXT_PUBLIC_HELIUS_API_KEY
+const HELIUS_API_KEY = 
+  process.env.HELIUS_API_KEY || 
+  process.env.NEXT_PUBLIC_HELIUS_API_KEY || 
+  'YOUR_HELIUS_API_KEY';
 const HELIUS_RPC_URL = `https://mainnet.helius-rpc.com/?api-key=${HELIUS_API_KEY}`;
 
 // Cache keys

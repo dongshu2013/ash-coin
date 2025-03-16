@@ -21,6 +21,17 @@ A beautiful and simple web3 application that allows users to connect their Phant
 - ESLint & Prettier for code quality
 - Husky & lint-staged for pre-commit hooks
 
+## Environment Variables
+
+The application requires the following environment variables:
+
+- **HELIUS_API_KEY**: Your Helius API key for Solana RPC access (for production)
+- **NEXT_PUBLIC_HELIUS_API_KEY**: Your Helius API key for local development
+
+For local development, copy `.env.example` to `.env.local` and fill in your API keys.
+
+For production deployment on Railway, set the environment variables in the Railway dashboard without the `NEXT_PUBLIC_` prefix.
+
 ## Getting Started
 
 ### Prerequisites
