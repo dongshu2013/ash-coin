@@ -1,12 +1,16 @@
 import { NextResponse } from 'next/server';
 
-// Get the API key directly from environment variables
-const HELIUS_API_KEY = process.env.HELIUS_API_KEY || '';
+// Get the API key directly from environment variables - check both possible names
+const HELIUS_API_KEY = process.env.HELIUS_API_KEY || process.env.NEXT_PUBLIC_HELIUS_API_KEY || '';
 const HELIUS_RPC_URL = `https://mainnet.helius-rpc.com/?api-key=${HELIUS_API_KEY}`;
 
 // Debug logging
 console.log(`[Blockheight API] Initializing with API key length: ${HELIUS_API_KEY.length}`);
 console.log(`[Blockheight API] API key is empty: ${HELIUS_API_KEY === ''}`);
+console.log(`[Blockheight API] process.env.HELIUS_API_KEY exists: ${!!process.env.HELIUS_API_KEY}`);
+console.log(
+  `[Blockheight API] process.env.NEXT_PUBLIC_HELIUS_API_KEY exists: ${!!process.env.NEXT_PUBLIC_HELIUS_API_KEY}`
+);
 if (HELIUS_API_KEY.length > 0) {
   console.log(`[Blockheight API] API key first 4 chars: ${HELIUS_API_KEY.substring(0, 4)}`);
 }

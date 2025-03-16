@@ -70,7 +70,14 @@ ENV HELIUS_API_KEY=""
 RUN echo '#!/bin/sh\n\
 echo "Starting server with environment variables:"\n\
 echo "HELIUS_API_KEY: ${HELIUS_API_KEY:-Not set}"\n\
+# Make sure environment variables are available to Next.js\n\
+export NODE_ENV=production\n\
+export NEXT_PUBLIC_HELIUS_API_KEY=${HELIUS_API_KEY:-""}\n\
 export HELIUS_API_KEY=${HELIUS_API_KEY:-""}\n\
+# Print environment for debugging\n\
+echo "Environment variables set:"\n\
+echo "HELIUS_API_KEY length: ${#HELIUS_API_KEY}"\n\
+echo "NEXT_PUBLIC_HELIUS_API_KEY length: ${#NEXT_PUBLIC_HELIUS_API_KEY}"\n\
 exec node server.js\n\
 ' > /app/start.sh && chmod +x /app/start.sh
 
