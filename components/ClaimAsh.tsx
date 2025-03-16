@@ -6,9 +6,27 @@ import { motion } from 'framer-motion';
 
 // Mock claim history
 const mockClaimHistory = [
-  { id: 1, date: '2023-11-15', blockRange: '1000000-1010000', credits: '425.50', ashAmount: '85.10' },
-  { id: 2, date: '2023-11-25', blockRange: '1010001-1020000', credits: '312.75', ashAmount: '62.55' },
-  { id: 3, date: '2023-12-05', blockRange: '1020001-1030000', credits: '578.25', ashAmount: '115.65' },
+  {
+    id: 1,
+    date: '2023-11-15',
+    blockRange: '1000000-1010000',
+    credits: '425.50',
+    ashAmount: '85.10',
+  },
+  {
+    id: 2,
+    date: '2023-11-25',
+    blockRange: '1010001-1020000',
+    credits: '312.75',
+    ashAmount: '62.55',
+  },
+  {
+    id: 3,
+    date: '2023-12-05',
+    blockRange: '1020001-1030000',
+    credits: '578.25',
+    ashAmount: '115.65',
+  },
 ];
 
 const ClaimAsh = () => {
@@ -39,22 +57,22 @@ const ClaimAsh = () => {
 
   const handleClaim = () => {
     if (currentBlock < nextClaimBlock) return;
-    
+
     setIsLoading(true);
-    
+
     // Simulate claiming process
     setTimeout(() => {
       const ashAmount = (parseFloat(creditBalance) * 0.2).toFixed(2);
-      
+
       // Add to claim history
       const newClaimRecord = {
         id: claimHistory.length + 1,
         date: new Date().toISOString().split('T')[0],
         blockRange: `${nextClaimBlock - 10000}-${nextClaimBlock}`,
         credits: creditBalance,
-        ashAmount: ashAmount
+        ashAmount: ashAmount,
       };
-      
+
       setClaimHistory([newClaimRecord, ...claimHistory]);
       setClaimedAmount(ashAmount);
       setAshBalance((parseFloat(ashBalance) + parseFloat(ashAmount)).toFixed(2));
@@ -62,7 +80,7 @@ const ClaimAsh = () => {
       setNextClaimBlock(nextClaimBlock + 10000);
       setBlockProgress(0);
       setShowSuccess(true);
-      
+
       setIsLoading(false);
     }, 2000);
   };
@@ -82,9 +100,9 @@ const ClaimAsh = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div>
           <h2 className="text-2xl font-bold mb-6">Claim Ash Coin</h2>
-          
+
           {showSuccess ? (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="card bg-accent-light/10 border border-accent-light/30 mb-6"
@@ -92,11 +110,10 @@ const ClaimAsh = () => {
               <div className="flex items-center justify-center flex-col text-center py-4">
                 <div className="text-5xl mb-4">✨</div>
                 <h3 className="text-xl font-bold mb-2">Claim Successful!</h3>
-                <p className="mb-4">You claimed <span className="font-bold">{claimedAmount}</span> ASH</p>
-                <button 
-                  onClick={() => setShowSuccess(false)} 
-                  className="btn-primary"
-                >
+                <p className="mb-4">
+                  You claimed <span className="font-bold">{claimedAmount}</span> ASH
+                </p>
+                <button onClick={() => setShowSuccess(false)} className="btn-primary">
                   Continue
                 </button>
               </div>
@@ -113,32 +130,36 @@ const ClaimAsh = () => {
                   <p className="text-2xl font-bold">{nextClaimBlock.toLocaleString()}</p>
                 </div>
               </div>
-              
+
               <div className="mb-6">
                 <div className="flex justify-between text-sm mb-2">
                   <span>Progress to next claim</span>
                   <span>{Math.min(Math.round(blockProgress), 100)}%</span>
                 </div>
                 <div className="w-full bg-ash-200 dark:bg-ash-800 rounded-full h-2.5">
-                  <div 
-                    className="bg-accent-DEFAULT h-2.5 rounded-full" 
+                  <div
+                    className="bg-accent h-2.5 rounded-full"
                     style={{ width: `${blockProgress}%` }}
                   ></div>
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="p-4 bg-ash-100 dark:bg-ash-800 rounded-lg">
-                  <h3 className="text-sm font-medium mb-1 text-ash-500 dark:text-ash-400">Credit Balance</h3>
+                  <h3 className="text-sm font-medium mb-1 text-ash-500 dark:text-ash-400">
+                    Credit Balance
+                  </h3>
                   <p className="text-xl font-bold">{creditBalance}</p>
                 </div>
                 <div className="p-4 bg-ash-100 dark:bg-ash-800 rounded-lg">
-                  <h3 className="text-sm font-medium mb-1 text-ash-500 dark:text-ash-400">ASH Balance</h3>
+                  <h3 className="text-sm font-medium mb-1 text-ash-500 dark:text-ash-400">
+                    ASH Balance
+                  </h3>
                   <p className="text-xl font-bold">{ashBalance}</p>
                 </div>
               </div>
-              
-              <button 
+
+              <button
                 className={`w-full py-3 rounded-lg font-medium ${
                   currentBlock >= nextClaimBlock
                     ? 'btn-primary'
@@ -147,14 +168,13 @@ const ClaimAsh = () => {
                 disabled={currentBlock < nextClaimBlock || isLoading}
                 onClick={handleClaim}
               >
-                {isLoading 
-                  ? 'Processing...' 
-                  : currentBlock >= nextClaimBlock 
-                    ? 'Claim ASH Coin' 
-                    : `Wait for block ${nextClaimBlock.toLocaleString()}`
-                }
+                {isLoading
+                  ? 'Processing...'
+                  : currentBlock >= nextClaimBlock
+                    ? 'Claim ASH Coin'
+                    : `Wait for block ${nextClaimBlock.toLocaleString()}`}
               </button>
-              
+
               {currentBlock < nextClaimBlock && (
                 <p className="text-sm text-ash-500 dark:text-ash-400 text-center mt-3">
                   Claims are available every 10,000 blocks
@@ -163,10 +183,10 @@ const ClaimAsh = () => {
             </div>
           )}
         </div>
-        
+
         <div>
           <h2 className="text-2xl font-bold mb-6">Claim History</h2>
-          
+
           {claimHistory.length === 0 ? (
             <div className="card text-center py-8">
               <p className="text-ash-500 dark:text-ash-400">No claim history yet</p>
@@ -184,9 +204,9 @@ const ClaimAsh = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {claimHistory.map((record) => (
-                      <tr 
-                        key={record.id} 
+                    {claimHistory.map(record => (
+                      <tr
+                        key={record.id}
                         className="border-b border-ash-100 dark:border-ash-800 hover:bg-ash-50 dark:hover:bg-ash-900/50"
                       >
                         <td className="py-3 px-4">{record.date}</td>
@@ -206,4 +226,4 @@ const ClaimAsh = () => {
   );
 };
 
-export default ClaimAsh; 
+export default ClaimAsh;

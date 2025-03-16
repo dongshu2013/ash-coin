@@ -16,14 +16,14 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col">
       <Header />
-      
+
       <div className="flex-grow container mx-auto px-4 py-8">
         {!connected ? (
           <div className="flex flex-col items-center justify-center h-[70vh] text-center">
             <h1 className="text-4xl font-bold mb-6">Welcome to Ash Coin</h1>
             <p className="text-xl mb-8 max-w-2xl">
-              Connect your Phantom wallet to view your Solana memecoins, burn them for credits, 
-              and claim Ash Coin rewards.
+              Connect your Phantom wallet to view your Solana memecoins, burn them for credits, and
+              claim Ash Coin rewards.
             </p>
             <WalletMultiButton className="btn-primary text-lg py-3 px-8" />
           </div>
@@ -34,7 +34,7 @@ export default function Home() {
                 onClick={() => setActiveTab('dashboard')}
                 className={`px-6 py-3 font-medium text-lg ${
                   activeTab === 'dashboard'
-                    ? 'border-b-2 border-accent-DEFAULT text-accent-DEFAULT'
+                    ? 'border-b-2 border-accent text-accent'
                     : 'text-ash-600 dark:text-ash-400'
                 }`}
               >
@@ -44,7 +44,7 @@ export default function Home() {
                 onClick={() => setActiveTab('burn')}
                 className={`px-6 py-3 font-medium text-lg ${
                   activeTab === 'burn'
-                    ? 'border-b-2 border-accent-DEFAULT text-accent-DEFAULT'
+                    ? 'border-b-2 border-accent text-accent'
                     : 'text-ash-600 dark:text-ash-400'
                 }`}
               >
@@ -54,7 +54,7 @@ export default function Home() {
                 onClick={() => setActiveTab('claim')}
                 className={`px-6 py-3 font-medium text-lg ${
                   activeTab === 'claim'
-                    ? 'border-b-2 border-accent-DEFAULT text-accent-DEFAULT'
+                    ? 'border-b-2 border-accent text-accent'
                     : 'text-ash-600 dark:text-ash-400'
                 }`}
               >
@@ -70,8 +70,8 @@ export default function Home() {
           </div>
         )}
       </div>
-      
+
       <Footer />
     </main>
   );
-} 
+}
