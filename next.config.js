@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const webpack = require('webpack');
-const path = require('path');
 
 // Load environment variables from .env.local if running in development
 if (process.env.NODE_ENV === 'development') {
@@ -32,9 +31,6 @@ const nextConfig = {
       https: require.resolve('https-browserify'),
       os: require.resolve('os-browserify/browser'),
       buffer: require.resolve('buffer/'),
-      // Add aliases for problematic native modules
-      usb: path.resolve(__dirname, './usb-stub.js'),
-      'node-hid': path.resolve(__dirname, './usb-stub.js'),
     };
 
     // Add buffer polyfill
