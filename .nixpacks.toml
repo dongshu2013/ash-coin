@@ -1,5 +1,6 @@
 [phases.setup]
 aptPkgs = ["libudev-dev", "python3", "build-essential"]
+nixPkgs = ["libudev"]
 
 [phases.install]
 cmds = ["pnpm install --no-frozen-lockfile"]
