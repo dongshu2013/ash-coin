@@ -3,8 +3,12 @@ builder = "DOCKERFILE"
 dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "node server.js"
+startCommand = "/app/start.sh"
 healthcheckPath = "/"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"
-restartPolicyMaxRetries = 10 
+restartPolicyMaxRetries = 10
+
+# Explicitly define environment variables that should be passed to the container
+[variables]
+NEXT_PUBLIC_HELIUS_API_KEY = "${NEXT_PUBLIC_HELIUS_API_KEY}" 

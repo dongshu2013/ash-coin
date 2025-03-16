@@ -1,7 +1,15 @@
 // Get Helius API key from environment variable
-// In production, use HELIUS_API_KEY, in development use NEXT_PUBLIC_HELIUS_API_KEY
-const HELIUS_API_KEY =
-  process.env.HELIUS_API_KEY || process.env.NEXT_PUBLIC_HELIUS_API_KEY || 'YOUR_HELIUS_API_KEY';
+// eslint-disable-next-line no-console
+console.log('Environment variables available:', {
+  NEXT_PUBLIC_HELIUS_API_KEY: process.env.NEXT_PUBLIC_HELIUS_API_KEY ? 'Set' : 'Not set',
+  NODE_ENV: process.env.NODE_ENV,
+});
+
+const HELIUS_API_KEY = process.env.NEXT_PUBLIC_HELIUS_API_KEY || 'YOUR_HELIUS_API_KEY';
+
+// eslint-disable-next-line no-console
+console.log('Using Helius API key:', HELIUS_API_KEY === 'YOUR_HELIUS_API_KEY' ? 'Fallback key' : 'Actual key');
+
 const HELIUS_RPC_URL = `https://mainnet.helius-rpc.com/?api-key=${HELIUS_API_KEY}`;
 
 // Cache keys

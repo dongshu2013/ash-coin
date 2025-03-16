@@ -47,6 +47,7 @@ RUN mkdir -p public
 ENV NEXT_TELEMETRY_DISABLED 1
 
 # Build the application
+# Note: We're not using environment variables during build time
 RUN pnpm build
 
 # Production image, copy all the files and run next
@@ -63,7 +64,14 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 # Add environment variables that will be available at runtime
 # These will be overridden by Railway environment variables
-ENV HELIUS_API_KEY=""
+ENV NEXT_PUBLIC_HELIUS_API_KEY=""
+
+# Create a script to start the application with environment variables
+RUN echo '#!/bin/sh\n\
+echo "Starting server with environment variables:"\n\
+echo "NEXT_PUBLIC_HELIUS_API_KEY: ${NEXT_PUBLIC_HELIUS_API_KEY:-Not set}"\n\
+exec node server.js\n\
+' > /app/start.sh && chmod +x /app/start.sh
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -87,4 +95,4 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-CMD ["node", "server.js"] 
+CMD ["/app/start.sh"] 

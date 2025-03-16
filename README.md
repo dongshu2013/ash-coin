@@ -23,14 +23,13 @@ A beautiful and simple web3 application that allows users to connect their Phant
 
 ## Environment Variables
 
-The application requires the following environment variables:
+The application requires the following environment variable:
 
-- **HELIUS_API_KEY**: Your Helius API key for Solana RPC access (for production)
-- **NEXT_PUBLIC_HELIUS_API_KEY**: Your Helius API key for local development
+- **NEXT_PUBLIC_HELIUS_API_KEY**: Your Helius API key for Solana RPC access (for both development and production)
 
-For local development, copy `.env.example` to `.env.local` and fill in your API keys.
+For local development, copy `.env.example` to `.env.local` and fill in your API key.
 
-For production deployment on Railway, set the environment variables in the Railway dashboard without the `NEXT_PUBLIC_` prefix.
+For production deployment on Railway, set the same environment variable in the Railway dashboard.
 
 ## Getting Started
 

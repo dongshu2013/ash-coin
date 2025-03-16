@@ -5,6 +5,10 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   output: 'standalone',
+  // Explicitly define environment variables that should be available at runtime
+  env: {
+    NEXT_PUBLIC_HELIUS_API_KEY: process.env.NEXT_PUBLIC_HELIUS_API_KEY || '',
+  },
   webpack: config => {
     // Add polyfills for Node.js modules used by Helius SDK
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
@@ -32,6 +36,12 @@ const nextConfig = {
         process: 'process/browser',
       })
     );
+
+    // Log environment variables during build (for debugging)
+    console.log('Building with environment variables:', {
+      NEXT_PUBLIC_HELIUS_API_KEY: process.env.NEXT_PUBLIC_HELIUS_API_KEY ? 'Set' : 'Not set',
+      NODE_ENV: process.env.NODE_ENV,
+    });
 
     return config;
   },
