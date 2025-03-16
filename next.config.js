@@ -9,7 +9,6 @@ if (process.env.NODE_ENV === 'development') {
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  output: 'standalone',
   env: {
     HELIUS_API_KEY: process.env.HELIUS_API_KEY || '',
   },
