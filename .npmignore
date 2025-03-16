@@ -1,5 +1,0 @@
-node_modules/usb
-node_modules/node-hid
-**/*.node
-**/build/Release
-**/prebuilds 

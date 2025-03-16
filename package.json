@@ -12,8 +12,7 @@
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "pre-commit-test": "lint-staged",
-    "verify-hooks": "./verify-hooks.sh",
-    "postinstall": "echo 'Skipping native module builds' && find node_modules -name 'binding.gyp' -exec bash -c 'cd $(dirname {}) && echo {} && mkdir -p build/Release' \\;"
+    "verify-hooks": "./verify-hooks.sh"
   },
   "dependencies": {
     "@solana/wallet-adapter-base": "^0.9.23",
