@@ -204,7 +204,7 @@ export async function getTokenMarketData(tokens: any[]) {
 }
 
 /**
- * Get the current block height from the Solana blockchain
+ * Get the current block height from the Solana blockchain via our backend API
  * @returns The current block height
  */
 export const getCurrentBlockHeight = async (): Promise<number> => {

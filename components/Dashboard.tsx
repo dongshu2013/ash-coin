@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import TokenCard from './TokenCard';
 import { motion } from 'framer-motion';
-import { getTokensByOwner, getTokenMarketData, getCurrentBlockHeight } from '@/utils/helius';
+import { getTokensByOwner, getTokenMarketData, getCurrentBlockHeight } from '@/utils/api';
 
 // Function to get emoji for token
 const getTokenEmoji = (symbol: string, isNft: boolean) => {
@@ -71,6 +71,7 @@ const mockBurnHistory: BurnRecord[] = [];
 
 const Dashboard = () => {
   const { publicKey } = useWallet();
+  const dataFetchedRef = useRef(false);
   const [assets, setAssets] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalValue, setTotalValue] = useState('0');
@@ -98,143 +99,117 @@ const Dashboard = () => {
   const [claimedAmount, setClaimedAmount] = useState('0');
   const [isLoadingBlock, setIsLoadingBlock] = useState(false);
 
-  const fetchAssets = async (forceRefresh = false) => {
-    if (!publicKey) {
-      setIsLoading(false);
-      return;
-    }
+  // Memoize the fetchAssets function to prevent recreating it on every render
+  const memoizedFetchAssets = useCallback(async () => {
+    if (!publicKey) return;
 
     setIsLoading(true);
     setError(null);
-
     try {
-      // If force refresh, clear the cache first
-      if (forceRefresh) {
-        clearCache(publicKey.toString());
-        setIsRefreshing(true);
-      }
-
-      // Fetch assets owned by the connected wallet
       const walletAssets = await getTokensByOwner(publicKey.toString());
+      const assetsWithMarketData = await getTokenMarketData(walletAssets);
 
-      if (walletAssets && walletAssets.length > 0) {
-        // Get market data for the assets
-        const assetsWithMarketData = await getTokenMarketData(walletAssets);
+      const formattedAssets = assetsWithMarketData
+        .filter(asset => asset.uiAmount > 0)
+        .map(asset => ({
+          id: asset.id,
+          name: asset.name,
+          symbol: asset.symbol,
+          balance: asset.uiAmount.toLocaleString(undefined, { maximumFractionDigits: 2 }),
+          price: `$${asset.price < 0.01 ? asset.price.toFixed(8) : asset.price.toFixed(2)}`,
+          value: `$${asset.value < 0.01 ? asset.value.toFixed(8) : asset.value.toFixed(2)}`,
+          change: `${asset.change24h > 0 ? '+' : ''}${asset.change24h.toFixed(1)}%`,
+          logo: getTokenEmoji(asset.symbol, asset.isNft),
+          rawValue: asset.value,
+          rawPrice: asset.price,
+          rawBalance: asset.uiAmount,
+          isNft: asset.isNft,
+          hasPrice: asset.hasPrice,
+          creditRate: 1.2 + Math.random() * 0.5,
+        }));
 
-        // Format assets for display
-        const formattedAssets = assetsWithMarketData
-          .filter(asset => {
-            // For tokens, include if they have a non-zero amount
-            return asset.uiAmount > 0;
-          })
-          .map(asset => ({
-            id: asset.id,
-            name: asset.name,
-            symbol: asset.symbol,
-            balance: asset.uiAmount.toLocaleString(undefined, { maximumFractionDigits: 2 }),
-            price: `$${asset.price < 0.01 ? asset.price.toFixed(8) : asset.price.toFixed(2)}`,
-            value: `$${asset.value < 0.01 ? asset.value.toFixed(8) : asset.value.toFixed(2)}`,
-            change: `${asset.change24h > 0 ? '+' : ''}${asset.change24h.toFixed(1)}%`,
-            logo: getTokenEmoji(asset.symbol, asset.isNft),
-            rawValue: asset.value,
-            rawPrice: asset.price,
-            rawBalance: asset.uiAmount,
-            isNft: asset.isNft,
-            hasPrice: asset.hasPrice,
-            creditRate: 1.2 + Math.random() * 0.5, // Mock credit rate between 1.2 and 1.7
-          }));
+      formattedAssets.sort((a, b) => b.rawValue - a.rawValue);
+      setAssets(formattedAssets);
 
-        // Sort assets by value (highest first)
-        formattedAssets.sort((a, b) => {
-          return b.rawValue - a.rawValue;
-        });
+      const total = formattedAssets.reduce((acc, asset) => acc + asset.rawValue, 0);
+      setTotalValue(total.toLocaleString(undefined, { maximumFractionDigits: 2 }));
 
-        setAssets(formattedAssets);
-
-        // Calculate total value
-        const total = formattedAssets.reduce((acc, asset) => acc + asset.rawValue, 0);
-        setTotalValue(total.toLocaleString(undefined, { maximumFractionDigits: 2 }));
-
-        // Check for ASH token and set balance
-        const ashToken = formattedAssets.find(asset => asset.symbol === 'ASH');
-        if (ashToken) {
-          setAshBalance(ashToken.balance);
-        } else {
-          setAshBalance('0');
-        }
-
-        // eslint-disable-next-line no-console
-        console.log('All assets:', formattedAssets);
-      } else {
-        // eslint-disable-next-line no-console
-        console.log('No assets found');
-        setAssets([]);
-        setTotalValue('0');
-        setAshBalance('0');
-      }
+      const ashToken = formattedAssets.find(asset => asset.symbol === 'ASH');
+      setAshBalance(ashToken ? ashToken.balance : '0');
+      setCreditBalance('0');
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.error('Error fetching assets:', err);
-      setError('Failed to load your assets. Please try again later.');
+      setError('Failed to fetch assets');
       setAssets([]);
       setTotalValue('0');
       setAshBalance('0');
+      setCreditBalance('0');
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
-      // Set a mock credit balance for now
-      setCreditBalance('0');
     }
-  };
+  }, [publicKey]);
 
-  // Function to fetch the current block height and calculate next claim block
-  const fetchCurrentBlock = async () => {
+  // Memoize fetchCurrentBlock to prevent recreating it on every render
+  const memoizedFetchCurrentBlock = useCallback(async () => {
+    if (isLoadingBlock || !publicKey) {
+      return;
+    }
+
     setIsLoadingBlock(true);
     try {
       const blockHeight = await getCurrentBlockHeight();
       setCurrentBlock(blockHeight);
-
-      // Calculate next claim block (next multiple of 10,000)
       const nextMultiple = Math.ceil(blockHeight / 10000) * 10000;
       setNextClaimBlock(nextMultiple);
-
-      // Calculate progress to next claim
-      const progress = ((blockHeight % 10000) / 10000) * 100;
+      const progress = ((blockHeight - (nextMultiple - 10000)) / 10000) * 100;
       setBlockProgress(progress);
-
-      // eslint-disable-next-line no-console
-      console.log(
-        `Current block: ${blockHeight}, Next claim: ${nextMultiple}, Progress: ${progress.toFixed(1)}%`
-      );
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error fetching current block:', error);
+      console.error('Error fetching block height:', error);
     } finally {
       setIsLoadingBlock(false);
     }
-  };
+  }, [publicKey, isLoadingBlock]);
 
+  // Effect for initial data loading
   useEffect(() => {
-    fetchAssets();
+    if (!publicKey) return;
 
-    // Fetch current block on initial load
-    fetchCurrentBlock();
+    const fetchData = async () => {
+      if (dataFetchedRef.current) return;
+      dataFetchedRef.current = true;
 
-    // Periodically update the block height (every 30 seconds)
-    const blockInterval = setInterval(() => {
-      fetchCurrentBlock();
-    }, 30000);
+      await Promise.all([memoizedFetchAssets(), memoizedFetchCurrentBlock()]);
+    };
+
+    fetchData();
+  }, [publicKey, memoizedFetchAssets, memoizedFetchCurrentBlock]);
+
+  // Effect for block height updates
+  useEffect(() => {
+    if (!publicKey) return;
+
+    // Update block height from backend API every 1 minute
+    const blockInterval = setInterval(async () => {
+      if (!isLoadingBlock) {
+        await memoizedFetchCurrentBlock();
+      }
+    }, 60000);
 
     return () => {
       clearInterval(blockInterval);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [publicKey]);
+  }, [publicKey, memoizedFetchCurrentBlock, isLoadingBlock]);
 
   // Handle manual refresh
-  const handleRefresh = () => {
-    fetchAssets(true);
-    fetchCurrentBlock();
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      clearCache(publicKey!.toString());
+      await Promise.all([memoizedFetchAssets(), memoizedFetchCurrentBlock()]);
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   // Handle burn token
@@ -410,7 +385,7 @@ const Dashboard = () => {
             disabled={isLoading || isRefreshing}
             className={`flex items-center text-sm font-medium px-3 py-1 rounded-md transition-colors ${
               isLoading || isRefreshing
-                ? 'bg-ash-200 text-ash-500 dark:bg-ash-800 dark:text-ash-600 cursor-not-allowed'
+                ? 'bg-ash-200 text-ash-500 cursor-not-allowed'
                 : 'bg-ash-100 text-ash-700 hover:bg-ash-200 dark:bg-ash-800 dark:text-ash-300 dark:hover:bg-ash-700'
             }`}
           >
@@ -419,7 +394,6 @@ const Dashboard = () => {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
             >
               <path
                 strokeLinecap="round"
